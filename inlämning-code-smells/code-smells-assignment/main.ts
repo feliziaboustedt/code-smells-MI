@@ -13,6 +13,11 @@
   
     return totalNumber;
   }
+
+  //Förenkling 
+  function getLengthResults(jumpings: number[]): number { 
+    return jumpings.reduce((total, jump) => total + jump, 0);
+  }
   
   /*
     2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
@@ -40,6 +45,20 @@
       return "IG";
     }
   }
+
+ 
+  //Förenkling 
+  class StudentPass {
+    constructor(
+      public name: string,
+      public handedInOnTime: boolean,
+      public passed: boolean
+    ) {}
+  }
+  function getStudentResult(student: StudentPass): string {
+    student.passed = student.name === "Sebastian" && student.handedInOnTime;
+    return student.passed ? "VG" : "IG";
+  }
   
   /*
     3. Variabelnamn är viktiga. Kika igenom följande kod och gör om och rätt.
@@ -63,7 +82,27 @@
   
     return r / 7;
   }
+
+
+  //Förenkling 
+  class CalcTemp {
+    constructor(public city:string, public date: Date, public temperature: number){}
+  }
   
+  function calcWeeklyTemp(celcius: CalcTemp[]) {
+    const oneWeekLength = Date.now() - 604800000; 
+
+    const recentReadning = celcius.filter(
+      (read) => read.city === "Stockholm" && read.date.getTime() > oneWeekLength)
+
+    if(recentReadning.length === 0){
+      return 0;
+    }
+
+    const totalTemperature = recentReadning.reduce((sum, r) => sum + r.temperature, 0)
+    return totalTemperature / recentReadning.length 
+  }
+
   /*
     4. Följande funktion kommer att presentera ett objekt i dom:en. 
     Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
@@ -91,11 +130,31 @@
     container.appendChild(pris);
     parent.appendChild(container);
   }
+
+
+  //Förenkling 
+  function displayProduct(
+    name: string,
+    price: string,
+    description: string,
+    image: string,
+    parent: HTMLElement
+  ) {
+    const content = document.createElement("div")
+
+    content.innerHTML = 
+    `<h4>${displayProduct.name}</h4>
+      <p><strong>${price}</strong></p>
+      <img src="${image}" alt="${showProduct.name}">`
+
+    parent.appendChild(content);
+  }
   
   /*
     5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
     går att göra betydligt bättre. Gör om så många som du kan hitta!
     */
+
   function presentStudents(students: Student[]) {
     for (const student of students) {
       if (student.handedInOnTime) {
@@ -118,8 +177,31 @@
         listOfStudents?.appendChild(container);
       }
     }
-  }
+  }  
+
+  //förenkling 
+function displayStudents(students: Student[]){
+  let passedList= document.querySelector("ul#passedstudents");
+  let failedList = document.querySelector("ul#failedstudents")
   
+  const createCheckboxRow = (isPassed: boolean) => {
+    return
+    `<div>
+      <input type="checkbox" ${isPassed ? 'checked' : ''}>
+      </div>
+    `};
+
+students.forEach(student => {
+  const infoRow = createCheckboxRow(student.handedInOnTime);
+  const studentResult = student.handedInOnTime ? passedList:failedList; 
+
+  if(studentResult) {
+    studentResult.innerHTML += infoRow; 
+  }
+});
+}
+
+
   /*
     6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
     Lorem, ipsum, dolor, sit, amet
@@ -135,6 +217,12 @@
   
     return result;
   }
+
+  //Förenkling 
+function concatenateStrings1(){
+  const loremArray = ["Lorem", "ipsum", "dolor", "sit", "amet"]; 
+  return loremArray.join(" ")
+}
   
   /* 
   7. Denna funktion skall kontrollera att en användare är över 20 år och göra någonting.
@@ -163,3 +251,22 @@
     }
   }
   
+
+  //Förenkling 
+  interface CreateUser {
+    name: string;
+    birthday: Date;
+    email: string,
+    password: string 
+  }
+   
+  function isUserAdult(birthDate: Date, minAge = 20): boolean { 
+    const age = new Date().getFullYear() - birthDate.getFullYear(); 
+    return age >= minAge 
+    } 
+   
+  function registerUser(newUser: CreateUser) { 
+    if (!isUserAdult(newUser.birthday)) { 
+      return ('Du är under 20 år!'); 
+      } 
+    } 
